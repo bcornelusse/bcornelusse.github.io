@@ -1,0 +1,426 @@
+Laboratoire 5
+=============
+
+Les notions abordées dans ce laboratoire sont les suivantes:
+
+* Mathématique:
+  
+  - Le produit vectoriel.
+    
+* Physique:
+
+  - La force de Laplace.
+  - La loi de Faraday.
+  - Le couple, l'accélération angulaire et le moment d'inertie.
+  - La deuxième loi de Newton pour un mouvement rotationnel.
+  - La loi d'Ohm.
+    
+Programme 10: Le moteur à courant continu
+-----------------------------------------
+
+L'objectif de ce laboratoire consiste à simuler un moteur à
+courant continu. Nous considérons un modèle simplifié de moteur
+construit de la façon suivante:
+
+* Le rotor comprend un seul enroulement, comprenant un nombre
+  :math:`K` de spires. Le rayon du rotor est noté :math:`R`,
+  et sa longueur est notée :math:`L`.
+
+  Chaque spire du rotor a donc la forme d'un rectangle de longueur
+  :math:`L` et de largeur :math:`2R`. Sur le diagramme ci-dessous,
+  les spires du rotor sont dessinées en mauve.
+        
+* Le stator est composé d'aimants permanents qui placent le
+  rotor dans un champ magnétique supposé constant et uniforme.
+  
+  Si ces aimants sont disposés comme dans le dessin ci-dessous,
+  le champ magnétique :math:`\vec{B}` dans le rotor sera donc
+  horizontal, et orienté de la gauche vers la droite.
+  
+* L'inductance de l'enroulement est supposée négligeable.
+
+
+  .. figure:: figures/moteur.png
+      :scale: 50%
+      :align: center
+      :alt: Géométrie du moteur.
+
+      Géométrie du moteur.
+
+L'affichage du moteur
+~~~~~~~~~~~~~~~~~~~~~
+
+A ce stade des laboratoires, vous avez acquis suffisamment d'expérience
+pour pouvoir écrire un programme Pygame sans suivre un tutoriel détaillé.
+
+Votre but consiste donc à écrire un premier programme qui
+
+* ouvre une fenêtre de 800 par 600 pixels.
+
+* gère une variable globale ``angle_moteur`` contenant à chaque instant
+  la position angulaire courante du rotor, exprimée en radians par
+  rapport à l'horizontale.
+  
+* y dessine une vue en deux dimensions du moteur, incluant une marque
+  permettant de repérer la position angulaire du rotor.
+
+* rafraîchit l'image 25 fois par seconde, tout en traitant une boucle
+  d'évènements chargée de détecter la fermeture de la fenêtre.
+
+L'idée est d'arriver à un affichage similaire à celui-ci. (Dans
+cet exemple, l'angle du rotor est égal à :math:`\pi/4`.)
+
+  .. figure:: figures/prog-10-screenshot-1.png
+      :scale: 50%
+      :align: center
+      :alt: Affichage du moteur.
+
+      Affichage du moteur.
+
+Premiers mouvements
+~~~~~~~~~~~~~~~~~~~
+
+Nous allons maintenant simuler le comportement du moteur lorsqu'on
+injecte un courant :math:`I` dans son enroulement.
+
+On sait qu'un conducteur rectiligne parcouru par un courant et placé
+dans un champ magnétique subit une *force de Laplace* égale à
+
+  .. math::
+     \vec{F} = I \vec{\ell} \times \vec{B},
+
+où
+
+* :math:`\vec{\ell}` est un vecteur orienté comme le courant dans le conducteur,
+  et de même longueur que ce dernier,
+
+* :math:`I` est le courant parcourant le conducteur,
+
+* :math:`\vec{B}` est le champ magnétique, et
+
+* ':math:`\times`' désigne le produit vectoriel.
+
+Dans le cas de notre moteur, chaque spire de l'enroulement est un rectangle,
+et possède donc quatre brins rectilignes:
+
+* Ceux qui sont perpendiculaires à l'axe du rotor subissent des forces
+  opposées dont la résultante est nulle (en rouge sur le diagramme ci-dessous).
+
+* Ceux qui sont parallèles à l'axe subissent des forces qui font tourner
+  le rotor (en vert sur le diagramme).
+
+  .. figure:: figures/moteur-2.png
+      :scale: 50%
+      :align: center
+      :alt: Forces de Laplace dans le moteur.
+
+      Forces de Laplace dans le moteur.
+
+Le couple :math:`\tau` exercé par ces forces sur le rotor est
+facile à calculer: Si l'angle du rotor avec l'horizontale est noté :math:`\theta`:
+
+* Chaque brin parallèle à l'axe de rotation subit une force égale à :math:`LIB`.
+
+* Le couple correspondant vaut :math:`RLIB \cos \theta`.
+
+* Etant donné qu'il y a :math:`K` spires et que chacune d'entre elles
+  contient deux brins contribuant à ce couple, ce dernier vaut au total
+
+  .. math::
+     \tau = 2KRLIB \cos \theta.
+
+Les modifications à apporter à votre programme afin qu'il simule le mouvement
+du rotor sont les suivantes:
+
+1. Pour rendre le programme interactif, le courant :math:`I` ne sera injecté
+   dans l'enroulement que lorsqu'on appuie sur une touche, par exemple la
+   barre d'espacement.
+
+   Pour ce faire, vous pouvez:
+
+   a) Modifier le code responsable de la gestion des évènements de façon
+      à détecter ceux de type ``pygame.KEYDOWN``, et dont le champ ``key``
+      est égal à ``pygame.K_SPACE``.
+
+   b) Lorsqu'un tel évènement est détecté, affecter la valeur 5 à une
+      variable ``compteur``, initialisée par défaut à 0.
+
+   c) A chaque itération de la boucle principale du programme, examiner
+      la valeur de ``compteur``. Si celle-ci est nulle, attribuer la valeur
+      0 à une variable globale ``courant_moteur``. Si, au contraire,
+      le compteur est non nul, le décrémenter et affecter à ``courant_moteur``
+      une valeur de 1 ampère.
+
+   d) Exécuter ``pygame.key.set_repeat(10, 10)`` avant de rentrer dans la
+      boucle principale du programme, afin d'activer le mode de répétition
+      rapide des touches du clavier.
+      
+2. Ajouter un tableau de bord, permettant de vérifier que le mécanisme
+   du point précédent a été correctement implémenté. A ce stade, ce tableau
+   de bord doit se contenter d'afficher la valeur du courant, comme dans
+   l'exemple ci-dessous:
+
+     .. figure:: figures/prog-10-screenshot-2.png
+      :scale: 50%
+      :align: center
+      :alt: Affichage du courant.
+
+      Affichage du courant.
+
+   Dans cet exemple, ``angle_moteur`` a été initialisé à 0. Le tableau
+   de bord doit afficher 1 A pendant quelques dixièmes de secondes après
+   un appui sur la barre d'espacement, et 0 A le reste du temps.
+
+3. Implémenter la simulation du mouvement. La procédure est similaire à
+   celle que vous avez déjà suivie dans les programmes précédents, pour
+   simuler le mouvement de corps chargés placés dans un champ électromagnétique:
+
+   a) En plus de la variable ``angle_moteur``, définir une variable
+      globale ``vitesse_moteur`` destinée à retenir la vitesse angulaire
+      du moteur, exprimée en radians par seconde. Ces deux variables peuvent
+      être initialisées à zéro.
+
+   b) A chaque itération de la la boucle principale, appeler une fonction
+      ``mettre_a_jour_moteur(t)`` chargée de calculer les équations du
+      mouvement et de modifier ``angle_moteur`` et ``vitesse_moteur`` en
+      conséquence.
+
+      L'argument ``t`` de cette fonction est l'instant courant, que
+      vous pouvez récupérer par un appel à ``pygame.time.get_ticks()``.
+      N'oubliez pas de le convertir en secondes, afin que la fonction
+      ``mettre_a_jour_moteur()`` puisse travailler avec des unités standard.
+
+   c) Dans ``mettre_a_jour_moteur()``, calculer le couple :math:`\tau`
+      subi par le rotor. Les constantes à utiliser sont les suivantes:
+
+      * Le rotor comprend :math:`K = 1000` spires.
+
+      * Le rayon du moteur vaut :math:`R = 0.02` m, et sa longueur
+        est égale à :math:`L = 0.06` m.
+
+      * Le champ magnétique vaut :math:`|\vec{B}| = 0.5` T.
+
+   d) Toujours dans cette fonction, calculer l'accélération angulaire
+      :math:`\alpha` subie par le rotor, grâce à la variante rotationnelle
+      de la seconde loi de Newton:
+
+      .. math::
+         \tau = J \alpha,
+      
+      où :math:`J` est le moment d'inertie du rotor. Pour votre simulation,
+      vous pouvez utiliser la valeur :math:`J = 1~\mbox{kg}.\mbox{m}^2`.
+
+   e) Sur base de :math:`\alpha` et de la différence de temps :math:`\delta`
+      écoulée depuis le dernier appel à ``mettre_a_jour_moteur()``,
+      calculer les nouvelles valeurs des variables  ``vitesse_moteur`` et
+      ``angle_moteur``. Le principe est similaire à la mise à jour de
+      la vitesse et de la position dans les programmes précédents.
+
+4. Tester votre programme. Si vous appuyez sur la barre d'espacement lorsque
+   la marque du rotor est du côté droit (près du pôle sud du stator, en
+   bleu), vous devriez pouvoir accélérer la rotation. Si vous appuyez lorsque
+   la marque est située à gauche (près du pôle nord, en rouge), le moteur
+   devrait ralentir, et même pouvoir changer de sens de rotation. Si, à
+   partir de l'arrêt, vous laissez la barre d'espacement enfoncée, le moteur
+   devrait effectuer des oscillations régulières entre les deux sens de
+   rotation. Est-ce bien le cas?
+
+5. Pour rendre la simulation plus réaliste, vous pouvez ajouter un couple
+   de frottement à celui calculé dans ``mettre_a_jour_moteur()``. Ce
+   couple de frottement sera égal à
+
+   .. math::
+      \tau_F = - c \dot{\theta},
+
+   où
+
+   * :math:`c` est un coefficient de frottement que l'on peut choisir
+     égal à :math:`0.2` N.m.s,
+
+   * :math:`\dot{\theta}` est la vitesse angulaire du moteur.
+
+   * le signe ':math:`-`' indique que ce frottement s'oppose à la
+     direction de rotation.
+
+6. Tester cette nouvelle version du programme. Si vous cessez
+   d'injecter du courant dans son enroulement, le moteur devrait
+   maintenant ralentir, et finalement s'arrêter. Si vous laissez la
+   barre d'espacement enfoncée, les oscillations devraient diminuer en
+   amplitude, jusqu'à ce que le moteur se retrouve bloqué dans une
+   configuration où les forces de Laplace ne parviennent plus à le
+   faire tourner.
+
+La commutation
+~~~~~~~~~~~~~~
+
+Dans sa configuration actuelle, notre moteur n'est pas directement
+utilisable: Lorsqu'il est parcouru par un courant constant, il ne
+tourne pas de façon permanente.
+
+Les moteurs à courant continu incluent un mécanisme de *collecteur*
+qui vise à résoudre ce problème. Il s'agit d'un dispositif mécanique
+qui inverse sélectivement le sens du courant dans l'enroulement en
+fonction de la position angulaire du rotor.
+
+La marche à suivre afin d'implémenter une tel mécanisme dans votre
+programme est la suivante:
+
+1. Dans la fonction ``mettre_a_jour_moteur()``, calculer à partir
+   de ``courant_moteur`` une nouvelle variable ``courant_enroulement``,
+   de la façon suivante:
+
+   - Si ``angle_moteur`` est compris entre 0 et :math:`\pi /2`,
+     ou bien entre  :math:`3\pi /2` et :math:`2 \pi`, alors
+     ``courant_enroulement = courant_moteur``.
+
+   - Si ``angle_moteur`` est compris entre :math:`\pi /2` et
+     :math:`3\pi /2`, alors ``courant_enroulement = -courant_moteur``.
+
+   **Attention:** Pour que le critère précédent soit valide, il faut
+   que ``angle_moteur`` possède une valeur comprise entre 0 et
+   :math:`2 \pi`. Vous pouvez utiliser la fonction ``math.fmod()``
+   pour ramener cette variable dans cet intervalle.
+
+
+2. Essayer le programme. Le moteur devrait à présent tourner de
+   façon continue si vous laissez la barre d'espacement enfoncée.
+
+Le circuit équivalent du moteur
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+En pratique, il est difficile d'injecter directement un courant
+donné dans les enroulements d'un moteur. On applique plutôt une
+*tension* à ses bornes, dont l'effet sera de faire circuler un courant
+dans le moteur.
+
+D'un point de vue électrique, un moteur à courant continu se comporte
+comme le circuit suivant:
+
+     .. figure:: figures/circuit-moteur.png
+      :scale: 100%
+      :align: center
+      :alt: Circuit équivalent du moteur.
+
+      Circuit équivalent du moteur.
+
+* :math:`V` est la tension présente aux bornes du moteur, et :math:`I`
+  le courant qui le traverse.
+
+* :math:`L_m` est l'*inductance* du moteur. Comme précisé au
+  début de ce laboratoire, nous négligerons cette inductance dans notre
+  simulation. (En d'autres termes, nous supposerons :math:`L_m = 0`.)
+
+* :math:`R_m` est la *résistance* des enroulements. Pour notre simulation,
+  nous fixerons :math:`R_m = 10~\Omega`.
+
+* :math:`E` est un générateur de tension correspondant à la *force électromotrice*
+  engendrée par le mouvement du rotor dans le champ magnétique.
+
+  La valeur de :math:`E` peut être calculée par la *loi de Faraday*:
+
+  - Le flux magnétique dans une spire du rotor vaut :math:`2LRB \sin \theta`.
+
+  - Etant donné que le rotor comprend :math:`K` spires, le flux total
+    vaut donc
+
+     .. math::
+        \Phi = 2KLRB \sin \theta.
+
+  - On a alors
+
+     .. math::
+        E = \frac{d\Phi}{dt} = 2 KRLB \dot{\theta} \cos \theta.
+
+    **Note:** Le signe de :math:`E` est choisi de façon à ce que
+    la force électromotrice s'oppose à la tension appliquée aux
+    bornes du moteur. En d'autres termes, elle a pour effet de réduire le courant
+    qui traverse le moteur.
+        
+* :math:`\tau` représente la conversion du courant
+  :math:`I` qui traverse le moteur en un couple mécanique qui fait
+  tourner celui-ci.
+
+
+Pour que notre programme puisse simuler ce circuit, les modifications
+suivantes doivent lui être apportées:
+
+1. Le principe de fonctionnement du programme doit être adapté. Plutôt
+   que d'imposer un courant constant dans le moteur chaque fois que l'on
+   presse la barre d'espacement, on va à présent imposer la *tension*
+   :math:`V` présente à ses bornes. La valeur de :math:`I` sera ensuite
+   calculée à partir de celle de :math:`V`.
+
+   La procédure est la suivante:
+
+   a) Créer une nouvelle variable globale ``tension_moteur``, initialisée
+      à 0 V.
+
+   b) Modifier le mécanisme de détection des frappes au clavier. L'idée
+      est d'imposer une tension de 10 V lorsqu'on presse la barre
+      d'espacement, et de laisser le circuit ouvert sinon (ce qui signifie
+      que les bornes du moteur ne seront alors pas connectées).
+
+      Pour ce faire, introduire une variable booléenne ``circuit_est_ouvert``,
+      initialement vraie. Lorsqu'on appuie sur la barre d'espacement,
+      plutôt que de modifier ``courant_moteur``, on attribuera la valeur
+      ``False`` à ``circuit_est_ouvert``. Lorsque la touche sera relâchée,
+      après expiration du compteur, ``circuit_est_ouvert`` redeviendra
+      ``True``.
+
+2. Dans la fonction ``mettre_a_jour_moteur()``:
+
+   a) Calculer la force électromotrice :math:`E`, en fonction de la position
+      angulaire courante :math:`\theta` du rotor (contenue dans ``angle_moteur``)
+      et de sa vitesse :math:`\dot{\theta}` (contenue dans ``vitesse_moteur``).
+
+      **Attention:** Cette tension peut se voir retournée par le
+      collecteur! Il faut donc en changer le signe si
+      ``angle_moteur`` est compris entre :math:`\pi/2` et :math:`3 \pi/2`.
+
+   b) Si ``circuit_est_ouvert`` est vraie, alors ``tension_moteur`` est
+      égale à :math:`E`, et ``courant_moteur`` vaut 0.
+
+   c) Si ``circuit_est_ouvert`` est fausse, alors ``tension_moteur`` est
+      égale à 10 V. Par application de la loi d'Ohm dans la résistance
+      :math:`R_m`, on obtient alors que ``courant_moteur`` est égal à
+      :math:`\displaystyle \frac{10 - E}{R_m}`.
+
+   d) La valeur de ``courant_moteur`` étant désormais connue, le reste
+      de la fonction peut calculer ``courant_enroulement``, le couple
+      produit, et l'accélération du rotor de façon inchangée.
+
+3. Dans le tableau de bord, afficher la tension aux bornes du moteur.
+   Le résultat devrait être similaire à celui-ci:
+
+     .. figure:: figures/prog-10-screenshot-3.png
+      :scale: 50%
+      :align: center
+      :alt: Affichage de la tension.
+
+      Affichage de la tension.
+
+   (Cette copie d'écran a été prise après avoir relâché la barre
+   d'espacement.)
+
+4. Tester soigneusement votre programme. Lorsque le circuit est ouvert,
+   vous devriez observer un courant nul, et une tension variant avec la
+   vitesse du moteur (qui se comporte alors comme une génératrice). Lorsque
+   le circuit est fermé, le moteur devrait accélérer, jusqu'à atteindre une
+   vitesse limite à laquelle les frottements sont exactement compensés par
+   le couple produit. Est-ce bien le cas?
+
+5. Si votre programme fonctionne, le déposer dans le répertoire centralisé
+   des laboratoires, avec le suffixe ``prog-10.py``.
+   
+Conclusions
+-----------
+
+Si vous avez atteint ce point (avec des programmes qui fonctionnent
+correctement), félicitations! S'il vous reste des séances disponibles
+avant la fin de l'année, vous êtes invités à terminer ces laboratoires
+en réalisant **un** des problèmes de la `version
+avancée
+<https:www.montefiore.ulg.ac.be/~boigelot/cours/labmp/tutoriel2/index.html>`_
+de ce cours, que vous pouvez librement choisir.
+Votre résultat peut être placé dans le dossier
+``labo-avance`` du répertoire centralisé.

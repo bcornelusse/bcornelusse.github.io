@@ -1,0 +1,25 @@
+.. Laboratoires de programmation mathématique et physique 2 documentation master file, created by
+   sphinx-quickstart on Mon Feb  5 11:32:41 2018.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+INFO2059-1: Laboratoires de programmation mathématique et physique 2
+====================================================================
+
+Bienvenue sur la page des laboratoires de programmation mathématique
+et physique 2. Ces laboratoires visent à mettre en pratique les
+notions étudiées aux cours de mathématiques et de physique, dans
+le cadre d'exercices de programmation en Python.
+
+Contenu:
+
+.. toctree::
+   :maxdepth: 3
+	      
+   outils
+   labo1
+   labo2
+   labo3
+   labo4
+   labo5
+   

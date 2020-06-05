@@ -1,0 +1,535 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Laboratoire 4 &#8212; documentation Laboratoires de programmation mathématique et physique 2 0.1</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="prev" title="Laboratoire 3" href="labo3.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="labo3.html" title="Laboratoire 3"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">documentation Laboratoires de programmation mathématique et physique 2 0.1</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="laboratoire-4">
+<h1>Laboratoire 4<a class="headerlink" href="#laboratoire-4" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Les notions abordées dans ce laboratoire sont les suivantes:</p>
+<ul class="simple">
+<li>Mathématique:<ul>
+<li>Le produit vectoriel.</li>
+<li>L’arithmétique modulaire.</li>
+</ul>
+</li>
+<li>Physique:<ul>
+<li>Le champ magnétique.</li>
+<li>La force de Lorentz.</li>
+<li>L’accélération centripète.</li>
+<li>La résonance.</li>
+</ul>
+</li>
+<li>Programmation Python:<ul>
+<li>Les <em>buffers</em> circulaires.</li>
+</ul>
+</li>
+</ul>
+<div class="section" id="programme-9-le-cyclotron">
+<h2>Programme 9: Le cyclotron<a class="headerlink" href="#programme-9-le-cyclotron" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Dans ce projet, vous aller simuler le mouvement d’une charge
+électrique dans un <em>cyclotron</em>, qui est un accélérateur de particules
+combinant l’utilisation d’un champ magnétique fixe et d’un champ électrique
+variable.</p>
+<div class="section" id="programme-de-base">
+<h3>Programme de base<a class="headerlink" href="#programme-de-base" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Le plus simple consiste à se baser sur le programme 3 développé dans le cadre
+du <a class="reference internal" href="labo2.html"><span class="doc">laboratoire 2</span></a>, qui simulait le mouvement
+d’une charge dans un champ électrique.</p>
+<p>Vous pouvez recopier ce programme dans un nouveau fichier <code class="docutils literal"><span class="pre">prog-9.py</span></code>,
+et y apporter les modifications suivantes:</p>
+<ol class="arabic">
+<li><p class="first">Retirer toutes les fonctions, variables et instructions relatives
+à la manipulation et à l’affichage des objets chargés
+électriquement.</p>
+<p><strong>Attention:</strong> Il
+ne faut pas supprimer les mécanismes d’affichage du mobile.</p>
+</li>
+<li><p class="first">Enlever également les lignes de code chargées de calculer et
+d’afficher l’énergie potentielle du mobile, ainsi que le potentiel
+électrique à l’endroit du pointeur de la souris.</p>
+</li>
+<li><p class="first">Dans notre cyclotron, le champ électrique sera uniforme, c’est-à-dire
+qu’il prendra la même valeur en tous les points de l’espace. Il sera
+toujours orienté verticalement par rapport à la fenêtre.</p>
+<p>Vous pouvez donc définir une variable globale <code class="docutils literal"><span class="pre">champ_electrique_v</span></code>
+correspondant à la composante verticale du champ électrique. Cette
+variable peut être initialisée à 10 V/m.</p>
+<p>Le fonction <code class="docutils literal"><span class="pre">calculer_champ()</span></code> destinée à calculer le champ
+électrique peut alors être remplacée par une fonction qui retourne
+simplement <code class="docutils literal"><span class="pre">(0,</span> <span class="pre">-champ_electrique_v)</span></code>. Le signe “-“ entraîne
+qu’une valeur positive de <code class="docutils literal"><span class="pre">champ_electrique_v</span></code> correspond à un
+champ orienté de bas en haut, puisque l’axe vertical du système de
+coordonnées de la fenêtre est orienté de haut en bas.</p>
+<p>Enfin, etant donné que le programme simulera un champ électrique et
+un champ magnétique, une bonne idée est de renommer <code class="docutils literal"><span class="pre">calculer_champ()</span></code>
+en <code class="docutils literal"><span class="pre">calculer_champ_electrique()</span></code> pour éviter toute confusion.</p>
+</li>
+<li><p class="first">Modifier le tableau de bord pour y afficher seulement la composante verticale
+du champ électrique et l’énergie cinétique du mobile.</p>
+</li>
+<li><p class="first">Mettre à jour les constantes utilisées dans le programme. Pour cette
+simulation, nous fixerons la charge du mobile à <span class="math">\(+10^{-10}\)</span> C et
+sa masse à <span class="math">\(10^{-10}\)</span> kg. Le mobile sera initialement placé au
+centre de la fenêtre, avec une vitesse nulle.</p>
+<p><strong>Note:</strong> Tout comme pour le programme 3, nous supposerons qu’un
+déplacement de 1 pixel dans la fenêtre correspond à une distance
+de 1 m dans la simulation.</p>
+</li>
+<li><p class="first">Modifier la boucle de simulation du programme de façon à ce que la
+fonction de mise à jour du mobile soit appelée pour chaque <strong>dixième
+de milliseconde</strong> de temps écoulé.</p>
+<p>Cette modification vise à obtenir une simulation suffisamment
+réaliste. Si un tel pas de simulation conduit à utiliser 100% des
+ressources CPU de votre ordinateur, vous pouvez l’augmenter.</p>
+</li>
+<li><p class="first">Tester votre programme. Si vous avez bien respecté les consignes,
+vous devriez obtenir un affichage semblable à celui-ci:</p>
+<blockquote>
+<div><div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="_images/prog-9-screenshot-1.png"><img alt="Programme de base." src="_images/prog-9-screenshot-1.png" style="width: 528.66px; height: 306.24px;" /></a>
+<p class="caption"><span class="caption-text">Programme de base.</span></p>
+</div>
+</div></blockquote>
+<p>Le mobile doit se déplacer de bas en haut. Pour une fenêtre de 900 pixels
+de haut, il devrait en atteindre le bord supérieur en un peu moins de
+10 secondes.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="champ-electrique-variable">
+<h3>Champ électrique variable<a class="headerlink" href="#champ-electrique-variable" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Cette étape consiste à ajouter au programme un mécanisme permettant de
+faire varier la composante verticale du champ électrique.</p>
+<p>Marche à suivre:</p>
+<ol class="arabic">
+<li><p class="first">Ajouter des instructions de gestion d’évènements dans la boucle principale
+du programme, de façon à détecter des appuis sur la flèche haute (code
+<code class="docutils literal"><span class="pre">pygame.K_UP</span></code>) et la flèche basse (code <code class="docutils literal"><span class="pre">pygame.K_DOWN</span></code>).</p>
+<p>Réagir à ces évènements en incrémentant ou en décrémentant la variable
+<code class="docutils literal"><span class="pre">champ_electrique_v</span></code>, par pas de 1 V/m. Implémenter un garde-fou
+garantissant que la valeur de cette variable reste toujours comprise
+dans l’intervalle [-100, 100].</p>
+</li>
+<li><p class="first">Détecter également les appuis sur la barre d’espacement (code
+<code class="docutils literal"><span class="pre">pygame.K_SPACE</span></code>), qui doivent repositionner le mobile au centre de la fenêtre,
+avec une vitesse nulle.</p>
+</li>
+<li><p class="first">Tester le bon fonctionnement du programme. Vous devriez être à même de
+contrôler le déplacement vertical du mobile, en agissant sur la composante
+verticale du champ électrique.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="modelisation-du-champ-magnetique">
+<h3>Modélisation du champ magnétique<a class="headerlink" href="#modelisation-du-champ-magnetique" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Nous allons à présent ajouter au système un champ magnétique uniforme,
+dont l’intensité pourra plus tard être contrôlée. Ce champ sera
+orienté perpendiculairement au plan de la fenêtre, et dirigé vers
+l’observateur. Cette situation est illustrée par la figure suivante:</p>
+<blockquote>
+<div><div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="_images/champ-magnetique.png"><img alt="Orientation du champ magnétique." src="_images/champ-magnetique.png" style="width: 192.0px; height: 220.0px;" /></a>
+<p class="caption"><span class="caption-text">Orientation du champ magnétique.</span></p>
+</div>
+</div></blockquote>
+<p>Ce champ magnétique induit une <em>force de Lorentz</em> qui affecte le mouvement
+du mobile. Cette force <span class="math">\(\vec{F}\)</span> est donnée par:</p>
+<blockquote>
+<div><div class="math">
+\[\vec{F} = q\vec{v} \times \vec{B},\]</div>
+</div></blockquote>
+<p>où</p>
+<ul class="simple">
+<li><span class="math">\(q\)</span> est la charge du mobile.</li>
+<li><span class="math">\(\vec{v}\)</span> est son vecteur vitesse.</li>
+<li><span class="math">\(\vec{B}\)</span> est le champ magnétique.</li>
+</ul>
+<p>Dans l’expression précédente, l’opérateur “<span class="math">\(\times\)</span>” est celui
+du <em>produit vectoriel</em>. Le produit vectoriel de deux vecteurs <span class="math">\(\vec{a}\)</span>
+et <span class="math">\(\vec{b}\)</span> est le vecteur <span class="math">\(\vec{c}\)</span> tel que:</p>
+<ul class="simple">
+<li>sa direction est perpendiculaire au plan formé par <span class="math">\(\vec{a}\)</span>
+et <span class="math">\(\vec{b}\)</span>, avec une orientation donnée par la <em>règle de la main
+droite</em>.</li>
+<li>sa norme est égale à <span class="math">\(|\vec{a}|\,|\vec{b}| \sin \theta\)</span>,
+où <span class="math">\(\theta\)</span> est l’angle formé par <span class="math">\(\vec{a}\)</span>
+et <span class="math">\(\vec{b}\)</span>.</li>
+</ul>
+<blockquote>
+<div><div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="_images/produit-vectoriel.png"><img alt="Produit vectoriel." src="_images/produit-vectoriel.png" style="width: 151.0px; height: 225.0px;" /></a>
+<p class="caption"><span class="caption-text">Produit vectoriel.</span></p>
+</div>
+</div></blockquote>
+<p>Dans le cas qui nous intéresse, comme le champ magnétique
+<span class="math">\(\vec{B}\)</span> est perpendiculaire au plan de la fenêtre et que le
+mobile se déplace dans ce plan, la force de Lorentz s’exercera dans ce
+plan. Le champ <span class="math">\(\vec{B}\)</span> étant dirigé vers l’observateur, cette
+force sera donc orientée de la façon suivante par rapport au vecteur
+vitesse (pour un mobile de
+charge positive):</p>
+<blockquote>
+<div><div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="_images/lorentz.png"><img alt="Orientation de la force de Lorentz." src="_images/lorentz.png" style="width: 163.0px; height: 189.0px;" /></a>
+<p class="caption"><span class="caption-text">Orientation de la force de Lorentz.</span></p>
+</div>
+</div></blockquote>
+<p>Voici les modifications à apporter au programme:</p>
+<ol class="arabic">
+<li><p class="first">Créer une nouvelle variable globale <code class="docutils literal"><span class="pre">champ_magnetique</span></code> représentant
+la composante du champ magnétique dans la direction perpendiculaire au
+plan de la fenêtre. Vous pouvez initialiser cette variable à 1 T.</p>
+</li>
+<li><p class="first">Dans le tableau de bord, afficher la valeur de ce champ magnétique,
+comme dans l’exemple ci-dessous:</p>
+<blockquote>
+<div><div class="figure align-center" id="id5">
+<a class="reference internal image-reference" href="_images/prog-9-screenshot-2.png"><img alt="Affichage du champ magnétique." src="_images/prog-9-screenshot-2.png" style="width: 528.66px; height: 306.24px;" /></a>
+<p class="caption"><span class="caption-text">Affichage du champ magnétique.</span></p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Dans la fonction responsable de mettre à jour la position du mobile,
+calculer la force exercée sur le mobile, à partir de la charge et
+du vecteur vitesse de celui-ci ainsi que de la valeur du champ magnétique.</p>
+<p>Comme expliqué précédemment, vous devriez obtenir un vecteur perpendiculaire
+au vecteur vitesse. Si le champ magnétique et la charge du mobile sont
+positifs, ce vecteur devrait être dirigé vers la droite, par rapport au
+vecteur vitesse.</p>
+<p>Ajouter cette force à celle produite par le champ électrique. Le reste
+de la fonction, chargée de calculer l’accélération produite par la
+résultante des forces
+et de mettre à jour la vitesse et la position du mobile, devrait rester
+inchangé.</p>
+</li>
+<li><p class="first">Tester votre programme. Avec les valeurs préconisées pour le champ électrique
+et le champ magnétique, le mobile devrait se déplacer vers la droite, en
+effectuant des petites boucles:</p>
+<blockquote>
+<div><div class="figure align-center" id="id6">
+<a class="reference internal image-reference" href="_images/prog-9-screenshot-3.png"><img alt="Déplacement dans des champs électrique et magnétique." src="_images/prog-9-screenshot-3.png" style="width: 528.66px; height: 306.24px;" /></a>
+<p class="caption"><span class="caption-text">Déplacement dans des champs électrique et magnétique.</span></p>
+</div>
+</div></blockquote>
+<p><strong>Note:</strong> Le mécanisme permettant d’afficher la trajectoire du mobile sera
+implémenté plus tard.</p>
+</li>
+<li><p class="first">Dans le code responsable de la gestion des évènements, ajouter la détection
+des touches “PageUp” (code <code class="docutils literal"><span class="pre">pygame.K_PAGEUP</span></code>) et “PageDown” (code
+<code class="docutils literal"><span class="pre">pygame.K_PAGEDOWN</span></code>), de façon à ce qu’elles modifient la valeur de
+<code class="docutils literal"><span class="pre">champ_magnetique</span></code>.</p>
+<p>Vous pouvez utiliser un pas de 0.01 T, et des valeurs minimale et maximale
+de <span class="math">\(\pm 1\)</span> T. Une fois ce mécanisme implémenté, vous pouvez initialiser
+le champ magnétique à 0 lors du lancement du programme.</p>
+</li>
+<li><p class="first">Tester soigneusement votre programme.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="affichage-de-la-trace">
+<h3>Affichage de la trace<a class="headerlink" href="#affichage-de-la-trace" title="Lien permanent vers ce titre">¶</a></h3>
+<p>L’objectif est maintenant d’implémenter un mécanisme capable d’afficher la
+trace du mobile, comme dans la copie d’écran de l’exemple précédent. Une
+solution simple consiste à retenir dans une structure de données adaptée
+un nombre donné de positions précédentes du mobile.</p>
+<p>Procédure à suivre:</p>
+<ol class="arabic">
+<li><p class="first">Avant de rentrer dans la boucle principale du programme, définissez quatre
+nouvelles variables:</p>
+<ul class="simple">
+<li>Une constante <code class="docutils literal"><span class="pre">TAILLE_TRACE</span></code> contenant le nombre de positions à mémoriser.
+Dans un premier temps, vous pouvez fixer sa valeur à 100.</li>
+<li>Un tableau <code class="docutils literal"><span class="pre">trace</span></code> contenant <code class="docutils literal"><span class="pre">TAILLE_TRACE</span></code> éléments,
+destinés à contenir les positions mémorisées.</li>
+<li>Un entier <code class="docutils literal"><span class="pre">nb_trace</span></code> contenant le nombre de positions utilisées dans le
+tableau <code class="docutils literal"><span class="pre">trace</span></code>. Initialement, la trace est vide, donc cette variable
+peut être initialisée à 0.</li>
+<li>Un entier <code class="docutils literal"><span class="pre">prochain_trace</span></code> indiquant l’index dans <code class="docutils literal"><span class="pre">trace</span></code>
+de l’emplacement dans lequel on placera la prochaine valeur.
+On peut l’initialiser à 0.</li>
+</ul>
+<p><strong>Note:</strong> Les instructions d’initialisation de ces variables
+peuvent être placées dans une fonction <code class="docutils literal"><span class="pre">initialiser_trace()</span></code>, que l’on
+appellera avant d’entrer dans la boucle principale, mais aussi après un appui
+sur la barre d’espacement.</p>
+</li>
+<li><p class="first">Définir une nouvelle fonction <code class="docutils literal"><span class="pre">ajouter_trace()</span></code> chargée d’ajouter la position
+courante du mobile à la trace. Cette fonction doit:</p>
+<ol class="loweralpha simple">
+<li>Incrémenter <code class="docutils literal"><span class="pre">nb_trace</span></code>, à condition que sa valeur soit strictement
+inférieure à <code class="docutils literal"><span class="pre">TAILLE_TRACE</span></code>.</li>
+<li>Ecrire la position du mobile dans <code class="docutils literal"><span class="pre">trace</span></code>, à l’endroit spécifié par
+<code class="docutils literal"><span class="pre">prochain_trace</span></code>.</li>
+<li>Incrémenter <code class="docutils literal"><span class="pre">prochain_trace</span></code>, modulo <code class="docutils literal"><span class="pre">TAILLE_TRACE</span></code>. En d’autres
+termes, si la nouvelle valeur devient égale à <code class="docutils literal"><span class="pre">TAILLE_TRACE</span></code>, elle
+doit être remise à zéro.</li>
+</ol>
+</li>
+<li><p class="first">Définir une nouvelle fonction <code class="docutils literal"><span class="pre">afficher_trace()</span></code>. Celle-ci doit:</p>
+<ol class="loweralpha">
+<li><p class="first">Balayer les <code class="docutils literal"><span class="pre">nb_trace</span></code> positions qui précèdent <code class="docutils literal"><span class="pre">prochain_trace</span></code>
+dans le tableau <code class="docutils literal"><span class="pre">trace</span></code>.</p>
+<p>Attention, les index considérés au cours de ce balayage doivent rester
+dans l’intervalle <code class="docutils literal"><span class="pre">[0,</span> <span class="pre">TAILLE_TRACE</span> <span class="pre">-</span> <span class="pre">1]</span></code>. Ils doivent donc être calculés
+en arithmétique modulo <code class="docutils literal"><span class="pre">TAILLE_TRACE</span></code>.</p>
+</li>
+<li><p class="first">Pour chaque élément balayé, dessiner un disque gris de 4 pixels de
+rayon à l’endroit correspondant.</p>
+</li>
+</ol>
+</li>
+<li><p class="first">Appeler les fonctions <code class="docutils literal"><span class="pre">afficher_trace()</span></code> et <code class="docutils literal"><span class="pre">ajouter_trace()</span></code> à chaque
+itération de la boucle principale <strong>(pas à chaque itération de la
+boucle de simulation!)</strong>.</p>
+</li>
+<li><p class="first">Vérifier que la trace s’affiche correctement. Ne pas hésiter à augmenter
+la valeur de <code class="docutils literal"><span class="pre">TAILLE_TRACE</span></code> à 1000 ou même 10000 éléments.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="le-cyclotron">
+<h3>Le cyclotron<a class="headerlink" href="#le-cyclotron" title="Lien permanent vers ce titre">¶</a></h3>
+<p>A ce stade, vous devriez prendre un peu de temps pour réaliser quelques
+expériences, afin de bien comprendre l’effet qu’ont le
+champ électrique et le champ magnétique sur une particule chargée.</p>
+<p>Observez en particulier l’influence de ces champs sur l’énergie cinétique
+du mobile. Pouvez-vous trouver un moyen d’augmenter le plus possible
+cette énergie cinétique sans perdre le mobile de vue?</p>
+<p>Si vous avez effectué ces expériences, vous avez probablement remarqué
+qu’avec un champ magnétique constant et un champ électrique nul, le
+mobile parcourt un cercle à vitesse constante. Si on donne une valeur
+positive au champ électrique lorsque le mobile remonte ce cercle (du
+bas vers le haut de la fenêtre), et une valeur négative lorsqu’il
+descend, le mobile accélère, donc augmente son énergie
+cinétique, et parcourt un cercle de rayon plus grand.  C’est le
+principe du <em>cyclotron</em>.</p>
+<p>Dans ce projet, notre objectif est d’implémenter un mode spécial du
+programme dans lequel la valeur du champ électrique sera
+automatiquement calculée de façon à accélérer le mobile, dans un champ
+magnétique constant. Le principe de ce calcul est le suivant:</p>
+<ul>
+<li><p class="first">Si le mobile parcourt un cercle à vitesse constante (lorsque le
+champ électrique est nul), c’est qu’il subit une accélération
+centripète égale à celle induite par la force de Lorentz.</p>
+</li>
+<li><p class="first">Appelons <span class="math">\(\omega\)</span> la vitesse angulaire du mobile sur son cercle,
+en radians par seconde (<span class="math">\(\omega = 2 \pi\)</span> signifie donc que le mobile
+effectue un tour complet par seconde). La vitesse du mobile vaut alors
+<span class="math">\(v = \omega r\)</span>, où <span class="math">\(r\)</span> est le rayon du cercle.</p>
+</li>
+<li><p class="first">L’accélération centripète du mobile vaut</p>
+<blockquote>
+<div><div class="math">
+\[\frac{v^2}{r} = \omega^2 r.\]</div>
+</div></blockquote>
+</li>
+<li><p class="first">L’accélération induite par la force de Lorentz vaut quant à elle</p>
+<blockquote>
+<div><div class="math">
+\[\frac{qvB}{m} = \frac{q \omega r B}{m},\]</div>
+</div></blockquote>
+<p>où <span class="math">\(q\)</span> est la charge du mobile, <span class="math">\(m\)</span> sa masse, et
+<span class="math">\(B\)</span> la composante du champ magnétique dans la direction
+perpendiculaire à la fenêtre.</p>
+</li>
+<li><p class="first">En égalant ces deux expressions, on obtient</p>
+<blockquote>
+<div><div class="math">
+\[\omega = \frac{qB}{m},\]</div>
+</div></blockquote>
+<p>ce qui signifie que le mobile parcourt</p>
+<blockquote>
+<div><div class="math">
+\[\frac{qB}{2\pi m}\]</div>
+</div></blockquote>
+<p>tours par seconde. (En d’autres termes, sa <em>fréquence</em> vaut
+<span class="math">\(\displaystyle\frac{qB}{2\pi m}\)</span>, et sa <em>période</em> vaut
+<span class="math">\(\displaystyle\frac{2\pi m}{qB}\)</span>.)</p>
+<p>Il est utile de vous assurer que ce calcul donne les résultats
+attendus par rapport à la simulation réalisée par votre
+programme. Vous pouvez par exemple fixer le champ magnétique à 1T,
+et le champ électrique à 0 V/m, après avoir mis le mobile en
+mouvement.  La période que vous chronométrez est-elle bien égale à
+celle prédite par cette formule?</p>
+</li>
+<li><p class="first">Si l’on fait donc osciller périodiquement la composante verticale
+du champ électrique à une fréquence égale à
+<span class="math">\(\displaystyle\frac{qB}{2\pi m}\)</span>, ce champ entrera en
+<em>résonance</em> avec le mouvement périodique de la particule dans
+le champ magnétique, ce qui aura pour effet d’augmenter petit à
+petit l’amplitude de ce mouvement.</p>
+</li>
+</ul>
+<p>Voici comment implémenter ce mécanisme dans votre programme:</p>
+<ol class="arabic">
+<li><p class="first">Définir une variable booléeenne <code class="docutils literal"><span class="pre">mode_cyclotron</span></code>, et l’initialiser
+à <code class="docutils literal"><span class="pre">False</span></code>.</p>
+</li>
+<li><p class="first">Détecter les frappes sur la touche “C” (code <code class="docutils literal"><span class="pre">pygame.K_c</span></code>), et
+y réagir en faisant passer <code class="docutils literal"><span class="pre">mode_cyclotron</span></code> à <code class="docutils literal"><span class="pre">True</span></code>. Réinitialiser
+<code class="docutils literal"><span class="pre">mode_cyclotron</span></code> à <code class="docutils literal"><span class="pre">False</span></code> si l’utilisateur modifie manuellement
+le champ électrique (flèches haute et basse), ou s’il repositionne
+le mobile (barre d’espacement).</p>
+</li>
+<li><p class="first">Lorsque le programme est en mode cyclotron (<code class="docutils literal"><span class="pre">mode_cyclotron</span> <span class="pre">==</span> <span class="pre">True</span></code>),
+appeler une nouvelle fonction <code class="docutils literal"><span class="pre">calculer_champ_cyclotron()</span></code>
+<strong>à chaque pas de simulation</strong> (c’est-à-dire, chaque fois que
+<code class="docutils literal"><span class="pre">mettre_a_jour_mobile()</span></code> est invoquée). Passer comme argument à cette
+fonction le pas de temps <code class="docutils literal"><span class="pre">dt</span></code> écoulé (normalement égal à 0.0001 s).</p>
+</li>
+<li><p class="first">Le but de la fonction <code class="docutils literal"><span class="pre">calculer_champ_cyclotron(dt)</span></code> est de mettre à jour
+la valeur de <code class="docutils literal"><span class="pre">champ_electrique_v</span></code>. La procédure est la suivante:</p>
+<ol class="loweralpha">
+<li><p class="first">Calculer la période <span class="math">\(T = \displaystyle\frac{2\pi m}{qB}\)</span>
+de l’oscillateur.</p>
+</li>
+<li><p class="first">Gérer dans cette fonction une variable globale <code class="docutils literal"><span class="pre">alpha</span></code>
+représentant la phase <span class="math">\(\alpha\)</span> de l’oscillateur. A chaque
+appel de la fonction, on met à jour <code class="docutils literal"><span class="pre">alpha</span></code> en lui ajoutant</p>
+<blockquote>
+<div><div class="math">
+\[\frac{2\pi\, \mbox{dt}}{T}.\]</div>
+</div></blockquote>
+<p>(En effet, cela signifie qu’après une période <span class="math">\(T\)</span>, l’oscillateur
+aura été incrémenté de <span class="math">\(2 \pi\)</span>.)</p>
+<p><strong>Note:</strong> Après cette mise à jour, il est utile de remplacer <code class="docutils literal"><span class="pre">alpha</span></code>
+par <code class="docutils literal"><span class="pre">math.fmod(alpha,</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">math.pi)</span></code> afin de limiter les erreurs
+numériques.</p>
+</li>
+<li><p class="first">Attribuer à <code class="docutils literal"><span class="pre">champ_electrique_v</span></code> une valeur égale à</p>
+<blockquote>
+<div><div class="math">
+\[A \sin \alpha,\]</div>
+</div></blockquote>
+<p>où l’amplitude <span class="math">\(A\)</span> du champ peut être fixée à
+10 V/m.</p>
+</li>
+</ol>
+</li>
+<li><p class="first">Initialiser le champ magnétique à 1T, et tester le programme.
+En activant le mode cyclotron à partir de la position initiale du mobile,
+l’affichage devrait ressembler à celui-ci après une quinzaine de secondes:</p>
+<blockquote>
+<div><div class="figure align-center" id="id7">
+<a class="reference internal image-reference" href="_images/prog-9-screenshot-4.png"><img alt="Cyclotron." src="_images/prog-9-screenshot-4.png" style="width: 528.66px; height: 306.24px;" /></a>
+<p class="caption"><span class="caption-text">Cyclotron.</span></p>
+</div>
+</div></blockquote>
+<p>Vous pouvez bien sûr donner une grande valeur, par exemple 10000,
+à <code class="docutils literal"><span class="pre">TAILLE_TRACE</span></code>. Observez-bien comment l’énergie cinétique du mobile
+augmente à chaque cycle, par l’effet du champ électrique.</p>
+</li>
+<li><p class="first">Si votre programme fonctionne, le déposer dans le répertoire des laboratoires,
+avec le suffixe <code class="docutils literal"><span class="pre">prog-9.py</span></code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Laboratoire 4</a><ul>
+<li><a class="reference internal" href="#programme-9-le-cyclotron">Programme 9: Le cyclotron</a><ul>
+<li><a class="reference internal" href="#programme-de-base">Programme de base</a></li>
+<li><a class="reference internal" href="#champ-electrique-variable">Champ électrique variable</a></li>
+<li><a class="reference internal" href="#modelisation-du-champ-magnetique">Modélisation du champ magnétique</a></li>
+<li><a class="reference internal" href="#affichage-de-la-trace">Affichage de la trace</a></li>
+<li><a class="reference internal" href="#le-cyclotron">Le cyclotron</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="labo3.html"
+                        title="Chapitre précédent">Laboratoire 3</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/labo4.rst.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="labo3.html" title="Laboratoire 3"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">documentation Laboratoires de programmation mathématique et physique 2 0.1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Bernard Boigelot.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>
